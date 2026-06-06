@@ -208,6 +208,13 @@ export function prepareForSpeech(input: string, opts: PrepareForSpeechOpts = {})
 	text = text.replace(/([!?.])\1{2,}/g, "$1");
 	text = text.replace(/-{3,}/g, " ");
 
+	// 14a. Local TTS models (especially Kokoro/Piper) often insert overly long
+	//      pauses for CLI/Markdown punctuation such as colons, semicolons, and
+	//      em dashes. For spoken assistant replies, soften these to comma-like
+	//      breath points instead of hard sentence breaks.
+	text = text.replace(/\s*[:;]\s+/g, ", ");
+	text = text.replace(/\s+[—–]\s+/g, ", ");
+
 	// 15. Collapse whitespace runs. Keep paragraph breaks (double newline)
 	//     because the segmenter uses them; everything else becomes a
 	//     single space.
