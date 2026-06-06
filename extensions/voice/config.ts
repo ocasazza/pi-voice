@@ -84,6 +84,8 @@ export interface VoiceConfig {
 	 * Override via `/voice-hold-delay <ms>` or settings.json.
 	 */
 	holdThresholdMs?: number;
+	/** If false, do not bind SPACE hold-to-talk; use toggleShortcut instead. */
+	holdToTalkEnabled?: boolean;
 	/**
 	 * BCP-47 language tag for TTS (overrides `language`). Useful when
 	 * STT and TTS should use different languages — e.g. user dictates in
@@ -135,6 +137,7 @@ export const DEFAULT_CONFIG: VoiceConfig = {
 	ttsAutoSpeak: true,
 	autoSubmitOnSpeak: false,
 	holdThresholdMs: 700,
+	holdToTalkEnabled: true,
 	ttsLanguage: undefined,
 	ttsDeepgramStreaming: false,
 	ttsOnboardingShown: false,
@@ -226,6 +229,9 @@ function migrateConfig(rawVoice: any, source: VoiceConfigSource): VoiceConfig {
 			&& rawVoice.holdThresholdMs <= 3000
 			? rawVoice.holdThresholdMs
 			: DEFAULT_CONFIG.holdThresholdMs,
+		holdToTalkEnabled: typeof rawVoice.holdToTalkEnabled === "boolean"
+			? rawVoice.holdToTalkEnabled
+			: DEFAULT_CONFIG.holdToTalkEnabled,
 		ttsLanguage: typeof rawVoice.ttsLanguage === "string" && rawVoice.ttsLanguage
 			? rawVoice.ttsLanguage
 			: undefined,
