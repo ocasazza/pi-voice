@@ -251,7 +251,12 @@ function detectAudioCaptureTool(): AudioCaptureTool | null {
 		// Input device varies by platform
 		let inputArgs: string[];
 		if (isMac) {
-			inputArgs = ["-f", "avfoundation", "-i", ":default"];
+			// Allow users to pin a macOS AVFoundation input without editing the
+			// extension. This is useful when `:default` points at a muted/silent
+			// device or when USB/Continuity devices reorder indexes. Examples:
+			//   PI_LISTEN_AVFOUNDATION_INPUT=":0"
+			//   PI_LISTEN_AVFOUNDATION_INPUT=":Logitech BRIO"
+			inputArgs = ["-f", "avfoundation", "-i", process.env.PI_LISTEN_AVFOUNDATION_INPUT || ":default"];
 		} else if (isLinux) {
 			inputArgs = ["-f", "pulse", "-i", "default"];
 		} else if (isWin) {
@@ -2604,7 +2609,7 @@ export default function (pi: ExtensionAPI) {
 						const isMac = process.platform === "darwin";
 						const isLinux = process.platform === "linux";
 						let testInputArgs: string[];
-						if (isMac) testInputArgs = ["-f", "avfoundation", "-i", ":default"];
+						if (isMac) testInputArgs = ["-f", "avfoundation", "-i", process.env.PI_LISTEN_AVFOUNDATION_INPUT || ":default"];
 						else if (isLinux) testInputArgs = ["-f", "pulse", "-i", "default"];
 						else {
 							const dshowDev = detectWindowsAudioDevice();

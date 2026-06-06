@@ -36,7 +36,7 @@ describe("prepareForSpeech — ANSI escapes", () => {
 	test("color codes stripped", () => {
 		const input = "\x1b[31mError:\x1b[0m something failed.";
 		const r = prepareForSpeech(input);
-		expect(r.text).toBe("Error: something failed.");
+		expect(r.text).toBe("Error, something failed.");
 		expect(r.stats.ansiEscapesRemoved).toBeGreaterThan(0);
 	});
 
