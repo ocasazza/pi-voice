@@ -134,7 +134,7 @@ export const DEFAULT_CONFIG: VoiceConfig = {
 	ttsLocalVoiceId: 0,
 	ttsDeepgramVoiceId: "aura-asteria-en",
 	ttsSpeed: 1.0,
-	ttsAutoSpeak: true,
+	ttsAutoSpeak: false,
 	autoSubmitOnSpeak: false,
 	holdThresholdMs: 700,
 	holdToTalkEnabled: true,
