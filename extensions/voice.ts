@@ -1583,6 +1583,10 @@ export default function (pi: ExtensionAPI) {
 		}
 	}
 
+	function shouldSetupHoldToTalk() {
+		return config.enabled && (config as any).holdToTalkEnabled !== false;
+	}
+
 	function setupHoldToTalk() {
 		if (!ctx?.hasUI) return;
 
@@ -2135,7 +2139,7 @@ export default function (pi: ExtensionAPI) {
 			// "MIC STREAM" text from a prior session. Hold-to-talk wiring
 			// only runs when enabled.
 			updateVoiceStatus();
-			if (config.enabled) {
+			if (shouldSetupHoldToTalk()) {
 				setupHoldToTalk();
 			}
 			return;
@@ -2163,7 +2167,7 @@ export default function (pi: ExtensionAPI) {
 			});
 			saveConfig(configToSave, config.scope === "project" ? "project" : "global", currentCwd);
 			updateVoiceStatus();
-			setupHoldToTalk();
+			if (shouldSetupHoldToTalk()) setupHoldToTalk();
 			if (!isStartup) return;
 			const backendLabel = hasLocalModel
 				? `Local model: ${LOCAL_MODELS.find(m => m.id === config.localModel)?.name || config.localModel} (offline, batch mode)`
@@ -2463,7 +2467,7 @@ export default function (pi: ExtensionAPI) {
 			if (sub === "on") {
 				config.enabled = true;
 				updateVoiceStatus();
-				setupHoldToTalk();
+				if (shouldSetupHoldToTalk()) setupHoldToTalk();
 				const backendInfo = config.backend === "local"
 					? `Voice enabled (local model: ${config.localModel || "whisper-small"}).`
 					: "Voice enabled (Deepgram streaming).";
@@ -2749,7 +2753,7 @@ export default function (pi: ExtensionAPI) {
 			// Default: toggle
 			config.enabled = !config.enabled;
 			if (!config.enabled) { voiceCleanup(); }
-			else { setupHoldToTalk(); }
+			else if (shouldSetupHoldToTalk()) { setupHoldToTalk(); }
 			updateVoiceStatus();
 			cmdCtx.ui.notify(`Voice ${config.enabled ? "enabled" : "disabled"}.`, "info");
 		},
@@ -2976,7 +2980,7 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		// Sync voice state after panel changes
-		if (config.enabled) { setupHoldToTalk(); }
+		if (shouldSetupHoldToTalk()) { setupHoldToTalk(); }
 		else { voiceCleanup(); }
 		updateVoiceStatus();
 	}
