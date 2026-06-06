@@ -62,8 +62,8 @@ import type {
 	ExtensionAPI,
 	ExtensionContext,
 	ExtensionCommandContext,
-} from "@mariozechner/pi-coding-agent";
-import { isKeyRelease, isKeyRepeat, matchesKey, Key, type KeyId } from "@mariozechner/pi-tui";
+} from "@earendil-works/pi-coding-agent";
+import { isKeyRelease, isKeyRepeat, matchesKey, Key, type KeyId } from "@earendil-works/pi-tui";
 
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import * as fs from "node:fs";
@@ -2235,7 +2235,7 @@ export default function (pi: ExtensionAPI) {
 	// /new, /resume, /fork. That event was removed in 0.65.0 in favor of the
 	// session_shutdown → session_start (with reason) flow handled above.
 	// We don't register a shim here because package.json:peerDependencies
-	// requires "@mariozechner/pi-coding-agent": ">=0.65.0", so a host without
+	// requires "@earendil-works/pi-coding-agent": ">=0.65.0", so a host without
 	// the new flow can't install this extension in the first place.
 
 	// ─── Auto-speak (TTS after assistant turn ends) ─────────────────────
